@@ -41,9 +41,11 @@ public:
 	/// Parameters:
 	/// self - this pointer of the class;
 	/// Example:
-	/// void freeObject(MyRuntimeStorage<Obj*> *self) {
-	///		//Delete stored data;
-	/// 		delete self->data;
+	/// void freeObject(RuntimeStorage *self) {
+	///		// 1, cast runtime type;
+	///		RealRuntimeStorage<MyType*> storage=static_cast<RealRuntimeStorage<MyType*>>(self);
+	///		// 2, Delete stored data;
+	/// 	delete storage->data;
 	/// }
 	//-------------------------------------------------------
 	void (*freeMethod)(RuntimeStorage *self);
@@ -100,11 +102,15 @@ public:
 	/// data - the real data;
 	//-------------------------------------------------------
 	template<typename T>
-	void set(std::string name, T data) {
+	void set(std::string name, T data,
+			void (*freeMethod)(RuntimeStorage *self)=nullptr) {
 		RealRuntimeStorage<T> *storage = nullptr;
 		auto it = this->m_objMap.find(name);
 		if (it == this->m_objMap.end()) {
 			storage = new RealRuntimeStorage<T>();
+			if (freeMethod != nullptr) {
+				storage->freeMethod = freeMethod;
+			}
 			this->m_objMap[name] = storage;
 		}
 		storage->data = data;
