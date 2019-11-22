@@ -1,7 +1,7 @@
 //-------------------------------------------------------
 // Dependency Injection for Modern C++
 // Runtime.hpp
-// Version 1.0.0
+// Version 1.0.2
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2019-2019 Lei Peng <http://www.leiex.com>.
@@ -32,6 +32,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <stdexcept>
 
 namespace rexlog {
 class RuntimeStorage {
@@ -43,7 +44,7 @@ public:
 	/// Example:
 	/// void freeObject(RuntimeStorage *self) {
 	///		// 1, cast runtime type;
-	///		RealRuntimeStorage<MyType*> storage=static_cast<RealRuntimeStorage<MyType*>>(self);
+	///		RealRuntimeStorage<MyType*> *storage=static_cast<RealRuntimeStorage<MyType*>>(self);
 	///		// 2, Delete stored data;
 	/// 	delete storage->data;
 	/// }
@@ -130,7 +131,9 @@ public:
 			storage = static_cast<RealRuntimeStorage<T>*>(it->second);
 			return storage->data;
 		}
-		return nullptr;
+		std::string whatStr = name;
+		whatStr += " is not set";
+		throw std::out_of_range(whatStr);
 	}
 	//-------------------------------------------------------
 	/// Delete a key, the data will also be free;
