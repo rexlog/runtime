@@ -44,7 +44,7 @@ public:
 	/// Example:
 	/// void freeObject(RuntimeStorage *self) {
 	///		// 1, cast runtime type;
-	///		RealRuntimeStorage<MyType*> *storage=static_cast<RealRuntimeStorage<MyType*>>(self);
+	///		RealRuntimeStorage<MyType*> *storage=static_cast<RealRuntimeStorage<MyType*>*>(self);
 	///		// 2, Delete stored data;
 	/// 	delete storage->data;
 	/// }
