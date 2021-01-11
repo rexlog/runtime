@@ -24,7 +24,7 @@ protected:
 int m_int;
 public:
 static void freeMethod(rexlog::RuntimeStorage *self){
-  rexlosg::RealRuntimeStorage<MyClass*> *storage=static_cast<rexlosg::RealRuntimeStorage<MyClass*>>(self);
+  rexlog::RealRuntimeStorage<MyClass*> *storage=static_cast<rexlog::RealRuntimeStorage<MyClass*>>(self);
   delete storage->data;
 }
 public:
