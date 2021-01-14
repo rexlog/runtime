@@ -1,7 +1,7 @@
 //-------------------------------------------------------
 // Dependency Injection for Modern C++
 // Runtime.hpp
-// Version 1.0.4
+// Version 1.1.4
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2019-2019 Lei Peng <http://www.leiex.com>.
@@ -32,6 +32,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include <functional>
 #include <stdexcept>
 
 namespace rexlog {
@@ -49,7 +50,8 @@ namespace rexlog {
         /// 	delete storage->data;
         /// }
         //-------------------------------------------------------
-        void (*freeMethod)(RuntimeStorage *self);
+        //void (*freeMethod)(RuntimeStorage *self);
+        std::function<void(RuntimeStorage *)> freeMethod;
         public:
         //-------------------------------------------------------
         /// Noticed that this class ensure all data stored can be safety released;
@@ -103,8 +105,46 @@ namespace rexlog {
         /// data - the real data;
         //-------------------------------------------------------
         template<typename T>
+        void set(std::string name, T data) {
+            RealRuntimeStorage<T> *storage = nullptr;
+            auto it = this->m_objMap.find(name);
+            if (it == this->m_objMap.end()) {
+                storage = new RealRuntimeStorage<T>();
+                this->m_objMap[name] = storage;
+            }
+            storage->data = data;
+        }
+        //-------------------------------------------------------
+        /// Setter: template method, store any type of data with a key;
+        /// Parameters:
+        /// name - the 'key' of data;
+        /// data - the real data;
+        /// freeMethod - custom free method when delete the key;
+        //-------------------------------------------------------
+        template<typename T>
         void set(std::string name, T data,
-                 void (*freeMethod)(RuntimeStorage *self)=nullptr) {
+                 void (*freeMethod)(RuntimeStorage *self)) {
+            RealRuntimeStorage<T> *storage = nullptr;
+            auto it = this->m_objMap.find(name);
+            if (it == this->m_objMap.end()) {
+                storage = new RealRuntimeStorage<T>();
+                if (freeMethod != nullptr) {
+                    storage->freeMethod = freeMethod;
+                }
+                this->m_objMap[name] = storage;
+            }
+            storage->data = data;
+        }
+        //-------------------------------------------------------
+        /// Setter: template method, store any type of data with a key;
+        /// Parameters:
+        /// name - the 'key' of data;
+        /// data - the real data;
+        /// freeMethod - custom free method when delete the key;
+        //-------------------------------------------------------
+        template<typename T>
+        void set(std::string name, T data,
+                 std::function<void(RuntimeStorage *self)> freeMethod) {
             RealRuntimeStorage<T> *storage = nullptr;
             auto it = this->m_objMap.find(name);
             if (it == this->m_objMap.end()) {
