@@ -1,6 +1,14 @@
 ### runtime
 Dependency Injection for Modern C++
 
+### Integrate runtime to your project
+Create a cpp file with following codes:
+```C++
+#include <Runtime.hpp>
+
+REXLOG_RUNTIME_IMPLEMENTION;
+```
+
 ### basic usage
 ```C++
 #include <runtime.hpp>
@@ -39,18 +47,4 @@ MyClass(){
 rexlog::Runtime *runtime = rexlog::Runtime::getInstance();
 runtime->set("myObj", new MyClass, MyClass::freeMethod);
 
-```
-
-### For MSVC users
-When you encount Link error of 1169, according to [MSDN](https://docs.microsoft.com/en-us/cpp/error-messages/tool-errors/linker-tools-error-lnk1169?view=msvc-160)
-
-LNK 1169, one or more multiply defined symbols found
-
-The build failed due to multiple definitions of one or more symbols. This error is preceded by error LNK2005.
-
-The /FORCE or /FORCE:MULTIPLE option overrides this error.
-
-for instance, if you're working on CMakeLists.txt. Then add following line:
-```cmake
-SET(CMAKE_EXE_LINKER_FLAGS  "/FORCE")
 ```
