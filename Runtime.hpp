@@ -1,7 +1,7 @@
 //-------------------------------------------------------
 // Dependency Injection for Modern C++
 // Runtime.hpp
-// Version 1.0.3
+// Version 1.0.4
 // Licensed under the MIT License <http://opensource.org/licenses/MIT>.
 // SPDX-License-Identifier: MIT
 // Copyright (c) 2019-2019 Lei Peng <http://www.leiex.com>.
@@ -167,7 +167,9 @@ namespace rexlog {
             }
         }
     };
-    Runtime* Runtime::s_instance = nullptr;
+    //Runtime* Runtime::s_instance = nullptr;
 }
+
+#define REXLOG_RUNTIME_IMPLEMENTION rexlog::Runtime *rexlog::Runtime::s_instance = nullptr
 
 #endif /* SRC_INCLUDE_RUNTIME_H_ */
