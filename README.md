@@ -9,7 +9,7 @@ Create a cpp file with following codes:
 REXLOG_RUNTIME_IMPLEMENTION;
 ```
 
-### basic usage
+### Basic usage
 ```C++
 #include <runtime.hpp>
 
@@ -25,7 +25,7 @@ std::cout <<"The server name is"<<runtime->get<std::string>("serverName")<<std::
 std::cout <<"The server port is"<<runtime->get<int>("serverPort")<<std::endl;
 ```
 
-### with custom free method
+### With custom free method
 ```C++
 class MyClass {
 protected:
@@ -48,3 +48,26 @@ rexlog::Runtime *runtime = rexlog::Runtime::getInstance();
 runtime->set("myObj", new MyClass, MyClass::freeMethod);
 
 ```
+
+### Use Lamba as custom free method
+```C++
+class MyClass {
+protected:
+int m_int;
+public:
+MyClass(){
+  this->m_int=new int;
+}
+~MyClass(){
+  delete this-> m_int;
+}
+}
+
+rexlog::Runtime *runtime = rexlog::Runtime::getInstance();
+runtime->set("myObj", new MyClass, [&](rexlog::RuntimeStorage *self){
+  rexlog::RealRuntimeStorage<MyClass*> *storage=static_cast<rexlog::RealRuntimeStorage<MyClass*>>(self);
+  delete storage->data;
+});
+
+```
+
